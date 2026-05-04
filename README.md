@@ -4,6 +4,8 @@ AI study app. HTML / CSS / JS frontend served by a Python Flask backend that pro
 
 ---
 
+5th place submission for Mizzou Claude Builders Club Hackathon 2026.
+
 ## ⚠️ READ THIS FIRST: How to actually run this
 
 **This app has a backend. You MUST run it as a Python server.** If you try to open `index.html` directly in the browser (`file://...`), or use VS Code's "Live Server" extension, or `python -m http.server`, **the chat and upload features will fail with HTTP 405**.
@@ -225,21 +227,4 @@ The browser never talks to Anthropic directly. Your API key stays on the server.
 | `POST` | `/api/ingest` | Parses uploaded syllabus/notes, returns structured data |
 | `GET`  | `/api/health` | Tells you if the server and API key are ready |
 
----
 
-## Hackathon checklist
-
-- [x] Frontend works
-- [x] Backend proxies Claude (key stays server-side)
-- [x] File upload with structured chapter extraction
-- [x] User-approved AI ingestion (no silent overwrites)
-- [x] Manual chapter creation
-- [x] Course / chapter / coursework deletion
-- [x] Grade percentage and letter display, toggleable
-- [x] Weighted grade calculation from syllabus
-- [x] Manual grade override
-- [x] Editable grade scale
-- [x] Persistence via localStorage
-- [x] Settings menu with reset
-- [ ] Test exam mode (Phase 2)
-- [ ] Knowledge graph view (Phase 2)
