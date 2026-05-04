@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyBrain</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ========================================================================
+     AUTH SCREEN  (shown when not logged in)
+     ======================================================================== -->
+<div id="authScreen" class="auth-screen hidden">
+  <!-- Left: Landing / marketing -->
+  <div class="auth-left">
+    <div class="flex items-center gap-3 mb-12">
+      <div class="brand-mark brand-mark-lg" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.5 4.5A3.5 3.5 0 0 0 6 8v8.5A3.5 3.5 0 0 0 9.5 20" />
+          <path d="M14.5 4.5A3.5 3.5 0 0 1 18 8v8.5a3.5 3.5 0 0 1-3.5 3.5" />
+          <path d="M9.5 4.5v15M14.5 4.5v15M6 9.5h3.5M14.5 9.5H18M6 14.5h3.5M14.5 14.5H18M9.5 12h5" />
+        </svg>
+      </div>
+      <span class="font-serif italic text-3xl">StudyBrain</span>
+    </div>
+    <h1 class="font-serif text-5xl leading-tight mb-4">
+      Your second brain<br/>for coursework.
+    </h1>
+    <p class="text-soft text-lg leading-relaxed mb-10 max-w-sm">
+      Upload a syllabus, get an AI tutor that guides you through every chapter — without just giving you the answers.
+    </p>
+    <ul class="space-y-4">
+      <li class="flex items-start gap-3">
+        <div class="feature-dot"></div>
+        <span class="text-secondary text-sm"><strong class="text-primary">Socratic AI Tutor</strong> — guides you toward understanding, never just hands over homework answers</span>
+      </li>
+      <li class="flex items-start gap-3">
+        <div class="feature-dot"></div>
+        <span class="text-secondary text-sm"><strong class="text-primary">Auto chapter extraction</strong> — upload a syllabus and your course structure fills in automatically</span>
+      </li>
+      <li class="flex items-start gap-3">
+        <div class="feature-dot"></div>
+        <span class="text-secondary text-sm"><strong class="text-primary">Grade tracking</strong> — percentage, letter grade, and weighted GPA all in one place</span>
+      </li>
+      <li class="flex items-start gap-3">
+        <div class="feature-dot"></div>
+        <span class="text-secondary text-sm"><strong class="text-primary">All your courses, one view</strong> — organized by class and chapter, with full chat history</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Right: Login / Register -->
+  <div class="auth-right">
+    <div class="auth-card">
+      <div class="flex border-b border-c mb-6">
+        <button id="tabSignIn" class="auth-tab active" data-tab="signin">Sign in</button>
+        <button id="tabSignUp" class="auth-tab" data-tab="signup">Create account</button>
+      </div>
+
+      <!-- Sign in form -->
+      <form id="signInForm" class="space-y-4">
+        <div>
+          <label class="form-label">Email</label>
+          <input id="signInEmail" type="email" required placeholder="you@university.edu" class="input-base" />
+        </div>
+        <div>
+          <label class="form-label">Password</label>
+          <input id="signInPassword" type="password" required placeholder="••••••••" class="input-base" />
+        </div>
+        <p id="signInError" class="text-[12px] hidden" style="color: var(--c-danger);"></p>
+        <button type="submit" class="btn-primary w-full">Sign in</button>
+      </form>
+
+      <!-- Create account form -->
+      <form id="signUpForm" class="space-y-4 hidden">
+        <div>
+          <label class="form-label">Full name</label>
+          <input id="signUpName" type="text" required placeholder="Derek Morton" class="input-base" />
+        </div>
+        <div>
+          <label class="form-label">Email</label>
+          <input id="signUpEmail" type="email" required placeholder="you@university.edu" class="input-base" />
+        </div>
+        <div>
+          <label class="form-label">Password</label>
+          <input id="signUpPassword" type="password" required placeholder="••••••••" class="input-base" />
+        </div>
+        <p id="signUpError" class="text-[12px] hidden" style="color: var(--c-danger);"></p>
+        <button type="submit" class="btn-primary w-full">Create account</button>
+      </form>
+
+      <p class="text-[11px] text-center text-muted mt-4">
+        This is a demo — no real data is stored on a server.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========================================================================
+     APP SCREEN  (shown when logged in)
+     ======================================================================== -->
+<div id="appScreen" class="hidden">
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="relative z-20 flex items-center justify-between px-6 py-4 border-b border-c">
+    <div class="flex items-center gap-3">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9.5 4.5A3.5 3.5 0 0 0 6 8v8.5A3.5 3.5 0 0 0 9.5 20" />
+          <path d="M14.5 4.5A3.5 3.5 0 0 1 18 8v8.5a3.5 3.5 0 0 1-3.5 3.5" />
+          <path d="M9.5 4.5v15M14.5 4.5v15M6 9.5h3.5M14.5 9.5H18M6 14.5h3.5M14.5 14.5H18M9.5 12h5" />
+        </svg>
+      </div>
+      <div class="flex items-baseline gap-2">
+        <span class="font-serif italic text-2xl">StudyBrain</span>
+        <span class="text-xs font-mono uppercase tracking-widest text-muted">v0.6</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="settingsBtn" class="btn-ghost-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+      <!-- Avatar — click for account panel -->
+      <button id="avatarBtn" class="avatar" title="Account">DM</button>
+    </div>
+  </header>
+
+  <!-- ============ MAIN LAYOUT ============ -->
+  <div class="main-shell relative">
+    <button id="restoreTab" class="restore-tab" type="button">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Show dashboard
+    </button>
+
+    <div class="flex flex-col h-full px-6 pt-5 gap-5">
+
+      <!-- Dashboard -->
+      <section id="dashboardPanel" class="dashboard-panel relative">
+        <div class="flex items-end justify-between mb-3">
+          <div>
+            <h2 class="font-serif text-3xl">Your courses</h2>
+            <div class="text-xs text-muted mt-1">Click to select · Hover to edit</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="addClassBtn" class="btn-secondary">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              Add class
+            </button>
+            <button id="hideDashBtn" class="btn-ghost-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/></svg>
+              Hide
+            </button>
+          </div>
+        </div>
+        <div id="courseGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"></div>
+      </section>
+
+      <!-- AI Tutor row -->
+      <section class="flex-1 flex gap-5 min-h-0">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="px-5 py-4 border-b border-c flex-shrink-0">
+            <div class="font-serif text-xl" id="activeClassLabel">—</div>
+            <div class="text-xs mt-0.5 text-soft" id="activeClassName">Select a course</div>
+          </div>
+
+          <div class="sidebar-section flex-1 min-h-0 flex flex-col">
+            <div class="sidebar-section-header">
+              <span>Chapters</span>
+              <button id="addChapterBtn" class="text-link text-xs">+ Add</button>
+            </div>
+            <div id="chapterList" class="overflow-y-auto flex-1"></div>
+          </div>
+
+          <div class="sidebar-section border-t border-c flex-shrink-0">
+            <div class="sidebar-section-header">
+              <span>Coursework</span>
+              <span id="courseworkCount" class="text-muted text-[10px] font-mono">(0)</span>
+            </div>
+            <div id="courseworkList" class="max-h-32 overflow-y-auto"></div>
+          </div>
+
+          <div class="px-4 py-4 border-t border-c flex-shrink-0">
+            <button id="uploadBtn" class="upload-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              <span id="uploadBtnLabel">Upload coursework</span>
+            </button>
+            <p class="text-[10px] mt-2 leading-relaxed text-muted">
+              Uploads to: <strong id="uploadTargetLabel" class="text-secondary">no course selected</strong>.<br/>
+              AI suggests chapters — you approve before applying.
+            </p>
+            <input type="file" id="fileInput" multiple class="hidden" accept=".pdf,.docx,.txt,.md" />
+          </div>
+        </aside>
+
+        <!-- AI Tutor / Study Mode workspace -->
+        <div class="chat-area">
+          <div class="px-6 py-4 border-b border-c flex items-center justify-between gap-4">
+            <div>
+              <div class="text-[10px] font-mono uppercase tracking-[0.2em] text-muted">AI Tutor</div>
+              <h3 class="font-serif text-2xl mt-0.5" id="chapterHeading">Select a chapter</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="mode-brain-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.5 4.5A3.5 3.5 0 0 0 6 8v8.5A3.5 3.5 0 0 0 9.5 20" />
+                  <path d="M14.5 4.5A3.5 3.5 0 0 1 18 8v8.5a3.5 3.5 0 0 1-3.5 3.5" />
+                  <path d="M9.5 4.5v15M14.5 4.5v15M6 9.5h3.5M14.5 9.5H18M6 14.5h3.5M14.5 14.5H18M9.5 12h5" />
+                </svg>
+              </span>
+              <select id="tutorModeSelect" class="mode-select" aria-label="AI tutor mode">
+                <option value="socratic">Socratic mode</option>
+                <option value="summary">Summary mode</option>
+                <option value="test">Test mode</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Socratic mode: existing chat UI -->
+          <div id="socraticPanel" class="mode-panel flex-1 min-h-0 flex flex-col">
+            <div id="chatLog" class="flex-1 overflow-y-auto px-6 py-6 space-y-5"></div>
+            <div class="px-6 py-4 border-t border-c">
+              <div class="chat-input-wrap">
+                <textarea id="chatInput" rows="1" placeholder="Ask a question about this chapter..." class="chat-textarea"></textarea>
+                <button id="sendBtn" class="send-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+              <div class="flex items-center justify-between mt-2 px-1">
+                <span class="text-[10px] font-mono uppercase tracking-widest text-muted">Enter to send · Shift+Enter for newline</span>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-muted" id="contextLabel">No context</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary mode -->
+          <div id="summaryPanel" class="mode-panel hidden flex-1 min-h-0 overflow-y-auto px-6 py-5">
+
+            <!-- Top bar: title + course/chapter range -->
+            <div class="test-topline">
+              <div class="test-page-title">Summary</div>
+              <div class="test-selects">
+                <select id="summaryCourseSelect" class="test-select" aria-label="Summary class"></select>
+                <span class="test-range-label">Chapters</span>
+                <button type="button" id="summaryChapterBtn" class="chapter-multi-btn" aria-haspopup="listbox" aria-expanded="false">
+                  <span id="summaryChapterBtnLabel">All chapters</span>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div id="summaryChapterPopover" class="chapter-multi-popover hidden" role="listbox"></div>
+              </div>
+              <div></div>
+            </div>
+
+            <!-- Sub-mode toggle: Cheat Sheet | Chapter Overview -->
+            <div class="test-submode-bar">
+              <button class="test-submode-btn active" data-summary-mode="cheatsheet">Study Cheat Sheet</button>
+              <button class="test-submode-btn" data-summary-mode="overview">Chapter Overview</button>
+            </div>
+
+            <!-- CHEAT SHEET PANEL -->
+            <div id="cheatsheetPanel" class="summary-panel-body">
+              <div id="cheatsheetContent" class="cheatsheet-content"></div>
+            </div>
+
+            <!-- CHAPTER OVERVIEW PANEL -->
+            <div id="overviewPanel" class="summary-panel-body hidden">
+              <div class="overview-topic-bar">
+                <label class="form-label" style="margin-bottom:6px;">Pick a topic</label>
+                <select id="overviewTopicSelect" class="test-select" style="min-width: 320px;"></select>
+              </div>
+              <div id="overviewContent" class="overview-content"></div>
+            </div>
+
+          </div>
+
+          <!-- Test mode -->
+          <div id="testPanel" class="mode-panel hidden flex-1 min-h-0 overflow-y-auto px-6 py-5">
+
+            <!-- Top bar: title + course/chapter range + shuffle -->
+            <div class="test-topline">
+              <div class="test-page-title">Test</div>
+              <div class="test-selects">
+                <select id="testCourseSelect" class="test-select" aria-label="Test class"></select>
+                <span class="test-range-label">Chapters</span>
+                <button type="button" id="testChapterBtn" class="chapter-multi-btn" aria-haspopup="listbox" aria-expanded="false">
+                  <span id="testChapterBtnLabel">All chapters</span>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div id="testChapterPopover" class="chapter-multi-popover hidden" role="listbox"></div>
+              </div>
+              <div class="test-topline-right">
+                <button id="testShuffleBtn" class="test-pill" type="button" title="Randomize card order">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+                  Shuffle
+                </button>
+              </div>
+            </div>
+
+            <!-- Sub-mode toggle: Flashcards | Multiple Choice | Short Answer -->
+            <div class="test-submode-bar">
+              <button class="test-submode-btn active" data-submode="flashcards">Flashcards</button>
+              <button class="test-submode-btn" data-submode="multiple_choice">Multiple Choice</button>
+              <button class="test-submode-btn" data-submode="short_answer">Short Answer</button>
+            </div>
+
+            <!-- Progress bar (shared) -->
+            <div class="test-progress-wrap">
+              <div class="test-progress-meta">
+                <span id="testProgressLabel">Card 1 of 1</span>
+                <span id="testScoreLabel">Right 0 · Wrong 0</span>
+              </div>
+              <div class="test-progress-track"><div id="testProgressBar" class="test-progress-fill"></div></div>
+            </div>
+
+            <!-- FLASHCARDS PANEL (full width) -->
+            <div id="flashcardsPanel" class="test-full-panel">
+              <div class="flashcard-stage">
+                <div id="testFlashcard" class="flashcard-shell" data-test-action="flip" title="Click to flip">
+                  <div class="flashcard-inner">
+                    <div class="flashcard-face flashcard-front">
+                      <div class="flashcard-kicker">Topic</div>
+                      <p id="flashcardFrontText" class="flashcard-topic-text">Select a chapter to start.</p>
+                      <p id="flashcardFrontOverview" class="flashcard-overview-text"></p>
+                    </div>
+                    <div class="flashcard-face flashcard-back">
+                      <div class="flashcard-kicker">Definition</div>
+                      <p id="flashcardBackText" class="flashcard-text">Flip the card to review the definition.</p>
+                    </div>
+                  </div>
+                </div>
+                <div id="testHint" class="test-hint hidden"></div>
+              </div>
+              <div class="flashcard-actions-bar">
+                <button type="button" data-test-action="previous" class="test-nav-btn">← Prev</button>
+                <div class="flashcard-actions-center">
+                  <button type="button" data-test-action="flip">Flip</button>
+                  <button type="button" data-test-action="right">✓ Got it</button>
+                  <button type="button" data-test-action="wrong">✗ Missed</button>
+                  <button type="button" data-test-action="explain">Explain</button>
+                </div>
+                <button type="button" data-test-action="next" class="test-nav-btn">Next →</button>
+              </div>
+            </div>
+
+            <!-- MULTIPLE CHOICE PANEL (full width) -->
+            <div id="multipleChoicePanel" class="test-full-panel hidden">
+              <div class="mc-question-block">
+                <div class="mc-kicker">Question</div>
+                <div id="mcQuestionText" class="mc-question-text">Select chapters to start.</div>
+              </div>
+              <div id="mcOptionsList" class="mc-options-list"></div>
+              <div id="mcExplainBox" class="mc-explain-box hidden"></div>
+              <div class="mc-actions">
+                <button type="button" id="mcExplainBtn" class="test-nav-btn hidden" data-test-action="mc-explain">Explain</button>
+                <button type="button" id="mcNextBtn" class="btn-primary" data-test-action="mc-next">Next →</button>
+              </div>
+            </div>
+
+            <!-- SHORT ANSWER PANEL (full width) -->
+            <div id="shortAnswerPanel" class="test-full-panel hidden">
+              <div class="written-question-block">
+                <label>Q:</label>
+                <div id="testQuestion" class="written-question">Select chapters to generate a question.</div>
+              </div>
+              <div class="written-answer-block">
+                <label>A:</label>
+                <textarea id="testAnswer" class="written-answer" placeholder="Type your answer here..."></textarea>
+              </div>
+              <div class="written-actions">
+                <button type="button" data-test-action="submit-answer" class="btn-primary">Submit</button>
+                <button type="button" data-test-action="next" class="test-nav-btn-right">Next →</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div><!-- end #appScreen -->
+
+
+<!-- ========================================================================
+     MODALS
+     ======================================================================== -->
+
+<!-- ACCOUNT PANEL -->
+<div id="accountModal" class="modal hidden-modal">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-panel" style="max-width:320px; margin-left:auto; margin-right:24px; margin-top:72px; align-self:flex-start;">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="avatar-lg" id="accountInitials">DM</div>
+      <div>
+        <div class="font-medium" id="accountName">—</div>
+        <div class="text-xs text-soft" id="accountEmail">—</div>
+      </div>
+    </div>
+    <div class="border-t border-c pt-4 space-y-1">
+      <button id="accountSettingsBtn" class="account-menu-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9 2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9 2.83-2.83"/></svg>
+        Settings
+      </button>
+      <button id="accountSignOutBtn" class="account-menu-btn account-menu-danger">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Sign out
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CLASS MODAL (with optional syllabus upload) -->
+<div id="addClassModal" class="modal hidden-modal">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-panel modal-lg">
+    <div class="flex items-start justify-between mb-1">
+      <h3 class="font-serif text-2xl">Add a class</h3>
+      <button data-close-modal class="btn-text-icon">✕</button>
+    </div>
+    <p class="text-sm text-soft mb-5">Fill in manually or upload a syllabus to auto-fill.</p>
+
+    <!-- Upload syllabus option -->
+    <div class="section-card mb-5">
+      <div class="flex items-center justify-between mb-2">
+        <div>
+          <div class="font-medium text-sm">Upload syllabus to auto-fill</div>
+          <div class="text-xs text-soft">PDF, DOCX, TXT, MD supported</div>
+        </div>
+        <button id="addClassUploadBtn" class="btn-secondary text-xs">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+          Choose file
+        </button>
+        <input type="file" id="addClassFileInput" class="hidden" accept=".pdf,.docx,.txt,.md" />
+      </div>
+      <div id="addClassUploadStatus" class="text-xs text-muted hidden">
+        <div class="flex items-center gap-2">
+          <div class="spinner-sm"></div>
+          <span id="addClassUploadMsg">Parsing syllabus...</span>
+        </div>
+      </div>
+    </div>
+
+    <form id="addClassForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="form-label">Course code</label>
+          <input id="newCourseCode" type="text" required placeholder="ECON 3251" class="input-base font-mono" />
+        </div>
+        <div>
+          <label class="form-label">Course name</label>
+          <input id="newCourseName" type="text" required placeholder="Intermediate Macroeconomics" class="input-base" />
+        </div>
+      </div>
+      <div>
+        <label class="form-label">Current grade % <span class="text-muted">(optional)</span></label>
+        <input id="newCoursePct" type="number" min="0" max="100" step="0.1" placeholder="91" class="input-base" />
+      </div>
+      <p id="addClassChaptersPreview" class="text-xs text-soft hidden"></p>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" data-close-modal class="btn-text">Cancel</button>
+        <button type="submit" class="btn-primary">Add course</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- EDIT COURSE MODAL -->
+<div id="editCourseModal" class="modal hidden-modal">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-panel modal-lg">
+    <div class="flex items-start justify-between mb-1">
+      <h3 class="font-serif text-2xl">Edit course</h3>
+      <button data-close-modal class="btn-text-icon">✕</button>
+    </div>
+    <p class="text-sm text-soft mb-5">Manually set grade, weights, and scale.</p>
+    <div class="modal-scroll space-y-5">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="form-label">Course code</label>
+          <input id="editCourseCode" type="text" class="input-base font-mono" />
+        </div>
+        <div>
+          <label class="form-label">Course name</label>
+          <input id="editCourseName" type="text" class="input-base" />
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="flex items-center justify-between mb-3">
+          <div class="font-medium">Grade</div>
+          <label class="flex items-center gap-2 text-xs text-soft cursor-pointer">
+            <input id="editGradeManual" type="checkbox" /> Set manually
+          </label>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="form-label">Percentage</label>
+            <input id="editGradePct" type="number" min="0" max="100" step="0.1" class="input-base" />
+          </div>
+          <div>
+            <label class="form-label">Letter</label>
+            <input id="editGradeLetter" type="text" class="input-base" placeholder="A-" />
+          </div>
+        </div>
+        <p class="text-[11px] text-muted mt-2" id="editGradeHint">With weights below, percentage auto-computes. Check "Set manually" to override.</p>
+      </div>
+      <div class="section-card">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <div class="font-medium">Grading weights</div>
+            <div class="text-xs text-soft">From your syllabus. Should sum to 100%.</div>
+          </div>
+          <button id="addWeightBtn" type="button" class="text-link text-xs">+ Add row</button>
+        </div>
+        <div class="weight-table-header">
+          <span>Category</span><span>Weight %</span><span>Earned %</span><span></span>
+        </div>
+        <div id="weightsList" class="space-y-2"></div>
+        <div class="flex items-center justify-between mt-3 pt-3 border-t border-c">
+          <span class="text-xs text-soft">Total weight</span>
+          <span id="weightsTotal" class="font-mono text-sm">0%</span>
+        </div>
+        <div class="flex items-center justify-between mt-1">
+          <span class="text-xs text-soft">Computed grade</span>
+          <span id="weightsComputed" class="font-mono text-sm">—</span>
+        </div>
+      </div>
+      <details class="section-card">
+        <summary class="cursor-pointer font-medium">Grade scale (advanced)</summary>
+        <p class="text-xs text-soft mt-2 mb-3">Minimum % required for each letter.</p>
+        <div id="gradeScaleGrid" class="grid grid-cols-3 gap-2"></div>
+        <button id="resetScaleBtn" type="button" class="text-link text-xs mt-3">Reset to default</button>
+      </details>
+    </div>
+    <div class="flex items-center justify-between gap-2 pt-5 border-t border-c mt-5">
+      <button id="deleteCourseBtn" type="button" class="btn-danger">Delete course</button>
+      <div class="flex items-center gap-2">
+        <button data-close-modal class="btn-text">Cancel</button>
+        <button id="saveCourseBtn" type="button" class="btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT CHAPTER MODAL (replaces direct X delete) -->
+<div id="editChapterModal" class="modal hidden-modal">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-panel">
+    <div class="flex items-start justify-between mb-1">
+      <h3 class="font-serif text-2xl">Edit chapter</h3>
+      <button data-close-modal class="btn-text-icon">✕</button>
+    </div>
+    <p class="text-sm text-soft mb-5">Edit the chapter or delete it from here.</p>
+    <form id="editChapterForm" class="space-y-4">
+      <div>
+        <label class="form-label">Title</label>
+        <input id="editChapterTitle" type="text" required class="input-base" />
+      </div>
+      <div>
+        <label class="form-label">Topics <span class="text-muted">(comma-separated)</span></label>
+        <input id="editChapterTopics" type="text" class="input-base" />
+      </div>
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-c">
+        <button id="deleteChapterBtn" type="button" class="btn-danger">Delete chapter</button>
+        <div class="flex items-center gap-2">
+          <button type="button" data-close-modal class="btn-text">Cancel</button>
+          <button type="submit" class="btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ADD CHAPTER MODAL -->
+<div id="addChapterModal" class="modal hidden-modal">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-panel">
+    <h3 class="font-serif text-2xl mb-1">Add chapter</h3>
+    <p class="text-sm text-soft mb-5">Manually add to the active course.</p>
+    <form id="addChapterForm" class="space-y-4">
+      <div>
+        <label class="form-label">Title</label>
+        <input id="newChapterTitle" type="text" required placeholder="Aggregate Demand" class="input-base" />
+      </div>
+      <div>
+        <label class="form-label">Topics <span class="text-muted">(comma-separated)</span></label>
+        <input id="newChapterTopics" type="text" placeholder="IS-LM, Multiplier effect" class="input-base" />
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button type="button" data-close-modal class="btn-text">Cancel</button>
+        <button type="submit" class="btn-primary">Add chapter</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- INGEST APPROVAL MODAL -->
+<div id="ingestModal" class="modal hidden-modal">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-panel modal-lg">
+    <div class="flex items-start justify-between mb-1">
+      <h3 class="font-serif text-2xl">Review AI extraction</h3>
+      <button data-close-modal class="btn-text-icon">✕</button>
+    </div>
+    <p class="text-sm text-soft mb-5">AI parsed your file(s). Edit anything wrong, then apply.</p>
+
+    <div class="modal-scroll space-y-5">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="form-label">Course code</label>
+          <input id="ingestCode" type="text" class="input-base font-mono" />
+        </div>
+        <div>
+          <label class="form-label">Course name</label>
+          <input id="ingestName" type="text" class="input-base" />
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <div class="font-medium">Chapters</div>
+            <div class="text-xs text-soft" id="ingestChaptersCount">0 found</div>
+          </div>
+          <button id="ingestAddChapterBtn" type="button" class="text-link text-xs">+ Add</button>
+        </div>
+        <!-- Table headers for chapters -->
+        <div class="ingest-chapter-header">
+          <span>Title</span>
+          <span>Topics (comma-separated)</span>
+          <span></span>
+        </div>
+        <div id="ingestChaptersList" class="space-y-2"></div>
+      </div>
+
+      <div class="section-card">
+        <div class="font-medium mb-2">Grading weights</div>
+        <!-- Table headers for weights -->
+        <div id="ingestWeightsHeader" class="ingest-weights-header hidden">
+          <span>Category</span>
+          <span>Weight %</span>
+          <span></span>
+        </div>
+        <div id="ingestWeightsList" class="space-y-2"></div>
+        <p id="ingestWeightsEmpty" class="text-xs text-muted">No weights detected.</p>
+      </div>
+
+      <div class="section-card">
+        <div class="font-medium mb-3">Apply mode</div>
+        <label class="flex items-start gap-2 mb-2 cursor-pointer">
+          <input type="radio" name="applyMode" value="merge" class="mt-1" checked />
+          <div>
+            <div class="text-sm">Merge</div>
+            <div class="text-xs text-soft">Keep existing chapters, append new ones.</div>
+          </div>
+        </label>
+        <label class="flex items-start gap-2 cursor-pointer">
+          <input type="radio" name="applyMode" value="replace" class="mt-1" />
+          <div>
+            <div class="text-sm">Replace</div>
+            <div class="text-xs text-soft">Overwrites existing chapters and weights.</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-2 pt-5 border-t border-c mt-5">
+      <button data-close-modal class="btn-text">Cancel</button>
+      <button id="ingestApplyBtn" type="button" class="btn-primary">Apply to course</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="modal hidden-modal">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-panel">
+    <div class="flex items-start justify-between mb-1">
+      <h3 class="font-serif text-2xl">Settings</h3>
+      <button data-close-modal class="btn-text-icon">✕</button>
+    </div>
+    <p class="text-sm text-soft mb-5">Preferences saved to your browser.</p>
+
+    <div class="space-y-4">
+      <div class="section-card">
+        <div class="font-medium mb-3">Course card display</div>
+        <label class="form-label" for="settingTheme">Color theme</label>
+        <select id="settingTheme" class="input-base mb-3">
+          <option value="dark">Dark</option>
+          <option value="gray">Gray</option>
+          <option value="light">Light</option>
+          <option value="gold">Gold</option>
+        </select>
+        <label class="toggle-row">
+          <span class="toggle-label">Show grade percentage</span>
+          <input id="settingShowPct" type="checkbox" class="toggle" />
+        </label>
+        <label class="toggle-row">
+          <span class="toggle-label">Show letter grade</span>
+          <input id="settingShowLetter" type="checkbox" class="toggle" />
+        </label>
+        <label class="toggle-row">
+          <span class="toggle-label">Show chapter count</span>
+          <input id="settingShowChapters" type="checkbox" class="toggle" />
+        </label>
+      </div>
+      <div class="section-card">
+        <div class="font-medium mb-3">Backend connection</div>
+        <div class="flex items-center justify-between py-2 text-sm">
+          <span class="text-soft">Server</span>
+          <span id="backendStatus" class="font-mono text-xs">checking...</span>
+        </div>
+        <div class="flex items-center justify-between py-2 text-sm">
+          <span class="text-soft">API key</span>
+          <span id="apiKeyStatus" class="font-mono text-xs">—</span>
+        </div>
+        <div class="flex items-center justify-between py-2 text-sm">
+          <span class="text-soft">Model</span>
+          <span id="modelStatus" class="font-mono text-xs">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-c mt-5 pt-5">
+      <div class="text-xs text-soft mb-2">Danger zone</div>
+      <button id="resetAllBtn" class="btn-danger w-full">Reset all data (courses, chapters, chats)</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>

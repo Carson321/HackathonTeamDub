@@ -1,0 +1,7 @@
+anthropic
+flask
+google-genai
+openai
+pypdf
+python-docx
+python-dotenv
